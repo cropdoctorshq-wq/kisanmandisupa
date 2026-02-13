@@ -1,16 +1,19 @@
 import { Routes, Route } from 'react-router-dom';
-import Landing from './pages/Landing';
-import Marketplace from './pages/Marketplace';
-import SellerDashboard from './pages/SellerDashboard';
-import BuyerDashboard from './pages/BuyerDashboard';
-import Login from './pages/auth/Login';
-import SignupBuyer from './pages/auth/SignupBuyer';
-import SignupFarmer from './pages/auth/SignupFarmer';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Layout from './components/Layout';
 import SplashScreen from './components/SplashScreen';
-import InstallGuide from './pages/InstallGuide';
-import EnquiryPage from './pages/EnquiryPage';
+import PageLoader from './components/PageLoader';
+
+// Lazy load pages
+const Landing = lazy(() => import('./pages/Landing'));
+const Marketplace = lazy(() => import('./pages/Marketplace'));
+const SellerDashboard = lazy(() => import('./pages/SellerDashboard'));
+const BuyerDashboard = lazy(() => import('./pages/BuyerDashboard'));
+const Login = lazy(() => import('./pages/auth/Login'));
+const SignupBuyer = lazy(() => import('./pages/auth/SignupBuyer'));
+const SignupFarmer = lazy(() => import('./pages/auth/SignupFarmer'));
+const InstallGuide = lazy(() => import('./pages/InstallGuide'));
+const EnquiryPage = lazy(() => import('./pages/EnquiryPage'));
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -27,20 +30,22 @@ function App() {
   }
 
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Landing />} />
-        <Route path="/home" element={<Marketplace />} />
-        <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/seller-dashboard" element={<SellerDashboard />} />
-        <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup-buyer" element={<SignupBuyer />} />
-        <Route path="/signup-farmer" element={<SignupFarmer />} />
-        <Route path="/install-guide" element={<InstallGuide />} />
-        <Route path="/enquiry" element={<EnquiryPage />} />
-      </Route>
-    </Routes>
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Landing />} />
+          <Route path="/home" element={<Marketplace />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/seller-dashboard" element={<SellerDashboard />} />
+          <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup-buyer" element={<SignupBuyer />} />
+          <Route path="/signup-farmer" element={<SignupFarmer />} />
+          <Route path="/install-guide" element={<InstallGuide />} />
+          <Route path="/enquiry" element={<EnquiryPage />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 }
 
